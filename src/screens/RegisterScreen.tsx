@@ -11,6 +11,7 @@ export default function RegisterScreen({ navigation }: any) {
     { id: '2', title: '子連れでリラックス', icon: '👶' },
     { id: '3', title: '効率よく観光したい', icon: '📸' },
     { id: '4', title: 'サウナ・温泉で整う', icon: '♨️' },
+    { id: '5', title: 'ご当地グルメを堪能したい', icon: '🍜'}
   ];
 
   return (

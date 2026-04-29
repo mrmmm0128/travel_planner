@@ -14,6 +14,7 @@ import ProfileEditScreen from '../screens/ProfileEditScreen';
 import HomeScreen from '../screens/HomeScreen';
 import ChatDetailScreen from '../screens/ChatDetailScreen';
 import ItineraryScreen from '../screens/ItineraryScreen';
+import ItineraryListScreen from '../screens/ItineraryListScreen';
 import ProfileScreen from '../screens/ProfileScreen';
 
 const Stack = createNativeStackNavigator();
@@ -60,7 +61,7 @@ function TabNavigator() {
       />
       <Tab.Screen 
         name="ItineraryTab" 
-        component={ItineraryScreen} 
+        component={ItineraryListScreen} 
         options={{ 
           tabBarLabel: 'しおり',
           tabBarIcon: ({ color, size }) => <FileText color={color} size={size} /> 
@@ -117,10 +118,7 @@ export default function AppNavigator() {
               name="Itinerary" 
               component={ItineraryScreen} 
               options={{ 
-                headerShown: true, 
-                headerTitle: '旅のしおり',
-                headerBackVisible: false,
-                headerTintColor: '#343a40',
+                headerShown: false,
               }} 
             />
           </>

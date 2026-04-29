@@ -1,61 +1,156 @@
-import React from 'react';
-import { View, Text, StyleSheet, SafeAreaView, ScrollView, Image, TouchableOpacity } from 'react-native';
-import { Map, Clock, Navigation } from 'lucide-react-native';
+import React, { useState } from 'react';
+import { View, Text, StyleSheet, SafeAreaView, ScrollView, Image, TouchableOpacity, FlatList } from 'react-native';
+import { Map, Clock, Navigation, UserPlus, ChevronLeft } from 'lucide-react-native';
 
-const ITINERARY = [
-  {
-    id: '1',
-    time: '10:00',
-    title: '京都駅 集合',
-    description: '烏丸中央口に集合します。',
-    type: 'transit',
+const MOCK_ITINERARY_DATA: Record<string, any> = {
+  '1': {
+    title: '京都着物カフェ巡りの旅',
+    days: [
+      {
+        id: 'day1',
+        label: 'Day 1',
+        dateText: 'Day 1 - 10月20日(土)',
+        events: [
+          {
+            id: '1-1',
+            time: '10:00',
+            title: '京都駅 集合',
+            description: '烏丸中央口に集合します。',
+            type: 'transit',
+          },
+          {
+            id: '1-2',
+            time: '10:30',
+            title: 'レンタル着物で着付け',
+            description: 'お好きな柄を選んで、ヘアセットも完了！',
+            image: 'https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?q=80&w=300&auto=format&fit=crop',
+            type: 'activity',
+          },
+          {
+            id: '1-3',
+            time: '12:00',
+            title: '古民家カフェ「○○」でランチ',
+            description: '京都の旬の食材を使ったおばんざいランチ。予約済みです。',
+            image: 'https://images.unsplash.com/photo-1555939594-58d7cb561ad1?q=80&w=300&auto=format&fit=crop',
+            type: 'meal',
+          },
+        ]
+      },
+      {
+        id: 'day2',
+        label: 'Day 2',
+        dateText: 'Day 2 - 10月21日(日)',
+        events: [
+          {
+            id: '2-1',
+            time: '09:30',
+            title: 'ホテル出発',
+            description: 'チェックアウトを済ませて出発。',
+            type: 'transit',
+          },
+          {
+            id: '2-2',
+            time: '10:00',
+            title: '清水寺 参拝',
+            description: '朝の空気が澄んでいる時間帯に参拝します。',
+            image: 'https://images.unsplash.com/photo-1542051812871-34f216edbf12?q=80&w=300&auto=format&fit=crop',
+            type: 'activity',
+          },
+        ]
+      }
+    ]
   },
-  {
-    id: '2',
-    time: '10:30',
-    title: 'レンタル着物で着付け',
-    description: 'お好きな柄を選んで、ヘアセットも完了！',
-    image: 'https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?q=80&w=300&auto=format&fit=crop',
-    type: 'activity',
+  '2': {
+    title: '北海道大自然満喫旅行',
+    days: [
+      {
+        id: 'day1',
+        label: 'Day 1',
+        dateText: 'Day 1 - 12月10日(月)',
+        events: [
+          {
+            id: '1-1',
+            time: '12:00',
+            title: '新千歳空港 到着',
+            description: 'レンタカーを借ります。',
+            type: 'transit',
+          }
+        ]
+      }
+    ]
   },
-  {
-    id: '3',
-    time: '12:00',
-    title: '古民家カフェ「○○」でランチ',
-    description: '京都の旬の食材を使ったおばんざいランチ。予約済みです。',
-    image: 'https://images.unsplash.com/photo-1555939594-58d7cb561ad1?q=80&w=300&auto=format&fit=crop',
-    type: 'meal',
-  },
-  {
-    id: '4',
-    time: '14:00',
-    title: '祇園白川を散策',
-    description: '石畳の風情ある街並みで映え写真を撮影しましょう📸',
-    image: 'https://images.unsplash.com/photo-1542051812871-34f216edbf12?q=80&w=300&auto=format&fit=crop',
-    type: 'activity',
-  },
-];
+  '3': {
+    title: '沖縄リフレッシュ休暇',
+    days: [
+      {
+        id: 'day1',
+        label: 'Day 1',
+        dateText: 'Day 1 - 3月5日(火)',
+        events: [
+          {
+            id: '1-1',
+            time: '14:00',
+            title: '那覇空港 到着',
+            description: 'ゆいレールで移動します。',
+            type: 'transit',
+          }
+        ]
+      }
+    ]
+  }
+};
 
-export default function ItineraryScreen({ navigation }: any) {
+export default function ItineraryScreen({ route, navigation }: any) {
+  const itineraryId = route?.params?.itineraryId || '1';
+  const itinerary = MOCK_ITINERARY_DATA[itineraryId] || MOCK_ITINERARY_DATA['1'];
+  
+  const [activeDayId, setActiveDayId] = useState(itinerary.days[0].id);
+
+  const activeDay = itinerary.days.find((d: any) => d.id === activeDayId) || itinerary.days[0];
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
-        <View>
-          <Text style={styles.headerTitle}>旅のしおり</Text>
-          <Text style={styles.headerSubtitle}>京都着物カフェ巡りの旅</Text>
-        </View>
-        <TouchableOpacity style={styles.mapButton}>
-          <Map size={20} color="#FFFFFF" />
+        <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
+          <ChevronLeft size={28} color="#343a40" />
         </TouchableOpacity>
+        <View style={styles.headerTextContainer}>
+          <Text style={styles.headerTitle}>旅のしおり</Text>
+          <Text style={styles.headerSubtitle} numberOfLines={1}>{itinerary.title}</Text>
+        </View>
+        <View style={styles.headerActions}>
+          <TouchableOpacity style={styles.iconButton}>
+            <UserPlus size={20} color="#343a40" />
+          </TouchableOpacity>
+          <TouchableOpacity style={[styles.iconButton, styles.mapButton]}>
+            <Map size={20} color="#FFFFFF" />
+          </TouchableOpacity>
+        </View>
+      </View>
+
+      <View style={styles.tabContainer}>
+        <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.tabScroll}>
+          {itinerary.days.map((day: any) => (
+            <TouchableOpacity 
+              key={day.id} 
+              style={[styles.tab, activeDayId === day.id && styles.tabActive]}
+              onPress={() => setActiveDayId(day.id)}
+            >
+              <Text style={[styles.tabText, activeDayId === day.id && styles.tabTextActive]}>
+                {day.label}
+              </Text>
+            </TouchableOpacity>
+          ))}
+        </ScrollView>
       </View>
 
       <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
         <View style={styles.dateCard}>
-          <Text style={styles.dateText}>Day 1 - 10月20日(土)</Text>
+          <Text style={styles.dateText}>{activeDay.dateText}</Text>
         </View>
 
         <View style={styles.timeline}>
-          {ITINERARY.map((item, index) => (
+          {activeDay.events.map((item: any) => (
             <View key={item.id} style={styles.timelineItem}>
               <View style={styles.timeColumn}>
                 <Text style={styles.timeText}>{item.time}</Text>
@@ -100,8 +195,15 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingHorizontal: 20,
-    paddingTop: 20,
+    paddingTop: 10,
     paddingBottom: 15,
+  },
+  backButton: {
+    marginRight: 10,
+  },
+  headerTextContainer: {
+    flex: 1,
+    paddingRight: 10,
   },
   headerTitle: {
     fontSize: 26,
@@ -114,21 +216,61 @@ const styles = StyleSheet.create({
     color: '#FF6B6B',
     fontWeight: '600',
   },
-  mapButton: {
+  headerActions: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  iconButton: {
     width: 44,
     height: 44,
     borderRadius: 22,
-    backgroundColor: '#FF6B6B',
+    backgroundColor: '#FFFFFF',
     justifyContent: 'center',
     alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 2,
+    marginLeft: 10,
+  },
+  mapButton: {
+    backgroundColor: '#FF6B6B',
     shadowColor: '#FF6B6B',
-    shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.3,
     shadowRadius: 6,
     elevation: 4,
   },
+  tabContainer: {
+    marginBottom: 15,
+  },
+  tabScroll: {
+    paddingHorizontal: 20,
+  },
+  tab: {
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    backgroundColor: '#FFFFFF',
+    borderRadius: 20,
+    marginRight: 10,
+    borderWidth: 1,
+    borderColor: '#e9ecef',
+  },
+  tabActive: {
+    backgroundColor: '#343a40',
+    borderColor: '#343a40',
+  },
+  tabText: {
+    color: '#6c757d',
+    fontWeight: '700',
+    fontSize: 15,
+  },
+  tabTextActive: {
+    color: '#FFFFFF',
+  },
   scrollContent: {
     padding: 20,
+    paddingTop: 5,
     paddingBottom: 40,
   },
   dateCard: {

@@ -2,8 +2,7 @@ import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { Search, MessageCircle, FileText, User } from 'lucide-react-native';
-
+import { Search, FileText, User } from 'lucide-react-native';
 import { useAuth } from '../contexts/AuthContext';
 import { View, Text, ActivityIndicator } from 'react-native';
 
@@ -11,8 +10,11 @@ import { View, Text, ActivityIndicator } from 'react-native';
 import LoginScreen from '../screens/LoginScreen';
 import SignUpScreen from '../screens/SignUpScreen';
 import ProfileEditScreen from '../screens/ProfileEditScreen';
-import HomeScreen from '../screens/HomeScreen';
-import ChatDetailScreen from '../screens/ChatDetailScreen';
+import ExploreScreen from '../screens/ExploreScreen';
+import PublicItineraryScreen from '../screens/PublicItineraryScreen';
+import CommentsScreen from '../screens/CommentsScreen';
+import CreateItineraryScreen from '../screens/CreateItineraryScreen';
+import EditItineraryScreen from '../screens/EditItineraryScreen';
 import ItineraryScreen from '../screens/ItineraryScreen';
 import ItineraryListScreen from '../screens/ItineraryListScreen';
 import ProfileScreen from '../screens/ProfileScreen';
@@ -20,7 +22,6 @@ import ProfileScreen from '../screens/ProfileScreen';
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
-const DummyChatList = () => <View style={{flex:1, justifyContent:'center', alignItems:'center'}}><Text>Chat List</Text></View>;
 
 function TabNavigator() {
   return (
@@ -44,26 +45,18 @@ function TabNavigator() {
       }}
     >
       <Tab.Screen 
-        name="HomeTab" 
-        component={HomeScreen} 
+        name="ExploreTab" 
+        component={ExploreScreen} 
         options={{ 
           tabBarLabel: '探す',
           tabBarIcon: ({ color, size }) => <Search color={color} size={size} /> 
         }} 
       />
       <Tab.Screen 
-        name="ChatTab" 
-        component={DummyChatList} 
-        options={{ 
-          tabBarLabel: 'チャット',
-          tabBarIcon: ({ color, size }) => <MessageCircle color={color} size={size} /> 
-        }} 
-      />
-      <Tab.Screen 
         name="ItineraryTab" 
         component={ItineraryListScreen} 
         options={{ 
-          tabBarLabel: 'しおり',
+          tabBarLabel: 'マイしおり',
           tabBarIcon: ({ color, size }) => <FileText color={color} size={size} /> 
         }} 
       />
@@ -105,13 +98,41 @@ export default function AppNavigator() {
           <>
             <Stack.Screen name="MainApp" component={TabNavigator} />
             <Stack.Screen 
-              name="ChatDetail" 
-              component={ChatDetailScreen} 
+              name="ProfileEdit" 
+              component={ProfileEditScreen} 
               options={{ 
                 headerShown: true, 
-                headerTitle: 'チャット',
-                headerBackVisible: false,
-                headerTintColor: '#343a40',
+                headerTitle: 'プロフィール編集',
+                headerBackTitleVisible: false,
+                headerTintColor: '#343a40'
+              }} 
+            />
+            <Stack.Screen 
+              name="PublicItinerary" 
+              component={PublicItineraryScreen} 
+              options={{ 
+                headerShown: false,
+              }} 
+            />
+            <Stack.Screen 
+              name="Comments" 
+              component={CommentsScreen} 
+              options={{ 
+                headerShown: false,
+              }} 
+            />
+            <Stack.Screen 
+              name="CreateItinerary" 
+              component={CreateItineraryScreen} 
+              options={{ 
+                headerShown: false,
+              }} 
+            />
+            <Stack.Screen 
+              name="EditItinerary" 
+              component={EditItineraryScreen} 
+              options={{ 
+                headerShown: false,
               }} 
             />
             <Stack.Screen 

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, SafeAreaView, TouchableOpacity, ScrollView, Alert } from 'react-native';
-import { User, Settings, FileText, Heart, LogOut, Phone, Map } from 'lucide-react-native';
+import { User, Heart, LogOut, Phone, Map } from 'lucide-react-native';
 import { useAuth } from '../contexts/AuthContext';
 import { supabase } from '../lib/supabase';
 
@@ -68,9 +68,6 @@ export default function ProfileScreen({ navigation }: any) {
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.headerTitle}>マイページ</Text>
-        <TouchableOpacity style={styles.iconButton}>
-          <Settings size={24} color="#343a40" />
-        </TouchableOpacity>
       </View>
 
       <ScrollView contentContainerStyle={styles.content}>
@@ -87,7 +84,7 @@ export default function ProfileScreen({ navigation }: any) {
           </View>
           <TouchableOpacity 
             style={styles.editButton}
-            onPress={() => Alert.alert('未実装', 'プロフィール修正画面へ遷移')}
+            onPress={() => navigation.navigate('ProfileEdit')}
           >
             <Text style={styles.editButtonText}>編集</Text>
           </TouchableOpacity>
@@ -114,14 +111,7 @@ export default function ProfileScreen({ navigation }: any) {
             <View style={[styles.menuIcon, { backgroundColor: '#ffe3e3' }]}>
               <Heart size={20} color="#FF6B6B" />
             </View>
-            <Text style={styles.menuText}>お気に入りプランナー</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity style={styles.menuItem}>
-            <View style={[styles.menuIcon, { backgroundColor: '#e3fafc' }]}>
-              <FileText size={20} color="#1098ad" />
-            </View>
-            <Text style={styles.menuText}>過去の旅のしおり</Text>
+            <Text style={styles.menuText}>お気に入りプラン</Text>
           </TouchableOpacity>
         </View>
 

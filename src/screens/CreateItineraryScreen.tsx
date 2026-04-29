@@ -545,3 +545,7 @@ const styles = StyleSheet.create({
     color: '#495057',
   }
 });
+function alert(arg0: string) {
+  throw new Error('Function not implemented.');
+}
+
